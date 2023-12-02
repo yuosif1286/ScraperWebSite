@@ -1,0 +1,29 @@
+﻿@page "/Pcdepot"
+
+@if (Pcdepotdetails.Any())
+{
+    <tr>
+        <h2> Pcdepot.com.My Product Table</h2>
+    </tr>
+
+
+    @foreach (var product in Pcdepotdetails)
+    {
+        <tr>
+            <td>@product.Name</td>
+            <td>@product.Description</td>
+            <td>@product.Price.ToString()</td>
+        </tr>
+    }
+
+}
+
+@code
+{
+    [Parameter]
+    public List<ProductDetails> Pcdepotdetails { get; set; } = new();
+
+
+
+
+}

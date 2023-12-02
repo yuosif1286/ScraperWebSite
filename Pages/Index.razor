@@ -1,0 +1,66 @@
+﻿@page "/"
+
+@inject ScraperService _scraperService
+<PageTitle>Index</PageTitle>
+
+<input @bind-value="@Search"  type="text" id="searchInput" placeholder="Search...">
+<button @onclick="@(async () => await Searching())">Search</button>
+
+    <h4>@message</h4>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            <PcdepotProductComponent Pcdepotdetails="_pcdepotdetails"></PcdepotProductComponent>
+            <SenqProductComponent Senqdetails="_senqdetails"></SenqProductComponent>
+            <PhcoProductComponent Pcdepotdetails="_phcodetails"></PhcoProductComponent>
+        </tbody>
+    </table>
+
+
+@code
+{
+    public bool loading { get; set; } = true;
+    public string message { get; set; } = "ابحث على اي منتج تود الحصول ع اسعاره";
+    public string? Search { get; set; } = "";
+    List<ProductDetails> _pcdepotdetails = new();
+    List<ProductDetails> _senqdetails = new();
+    List<ProductDetails> _phcodetails = new();
+
+
+    async Task FetchSearchResults()
+    {
+        _pcdepotdetails = await _scraperService.DoScraperSenheng();
+        _senqdetails = await _scraperService.DoScraperSenq();
+        _phcodetails = await _scraperService.DoScraperPhco();
+    }
+
+    async Task Searching()
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(Search))
+             return;
+            loading = true;
+            message = $" جار البحث عن المنتج {Search}";
+            StateHasChanged();
+            _scraperService.Search = Search;
+            await FetchSearchResults();
+        }
+        catch (Exception ex)
+        {
+            // Handle exceptions and provide user feedback
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+            loading = false;
+        message = "";
+            StateHasChanged();
+        
+    }
+}
