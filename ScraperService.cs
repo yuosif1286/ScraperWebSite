@@ -1,6 +1,7 @@
 ﻿using System.Net;
-using System.Web;
 using HtmlAgilityPack;
+using ScrapySharp.Extensions;
+using ScrapySharp.Network;
 
 namespace ScraperWebSite
 {
@@ -82,31 +83,21 @@ namespace ScraperWebSite
         public async Task<List<ProductDetails>> DoScraperElryan()
         {
             List<ProductDetails> Details = new List<ProductDetails>();
-            var web = new HtmlWeb();
-            web.Timeout = 300000;
+            var web = new ScrapingBrowser();
+            web.Timeout = TimeSpan.FromMinutes(15);
+            var httpClient = new HttpClient();
+            // Make the GET request and read the response content
+            var response = await httpClient.GetAsync($"https://www.amazon.com/s?k={GetSearch(Search)}&ref=nb_sb_noss");
+            var result = await response.Content.ReadAsStringAsync();
 
             // loading the target web page 
-            var document = await web.LoadFromWebAsync($"https://www.elryan.com/ar/search?q={GetSearch(Search)}");
+           var webPage = await web.NavigateToPageAsync(new Uri($"https://www.amazon.com/s?k={GetSearch(Search)}&ref=nb_sb_noss"));
 
-            // Introduce a delay (e.g., 5 seconds) to allow dynamic content to load
-            // await Task.Delay(1000); // Adjust the delay time as needed
+           var html = webPage.Html;
+        
 
-            // Wait for a specific element with class 'container' to appear
-            var maxAttempts = 10;
-            var currentAttempt = 0;
-            var contentHTMLElements = document.DocumentNode.QuerySelectorAll("div.container");
-
-            while (contentHTMLElements.Count == 0 && currentAttempt < maxAttempts)
-            {
-                await Task.Delay(1000); // Adjust the delay time as needed
-                document = await web.LoadFromWebAsync($"https://www.elryan.com/ar/search?q={GetSearch(Search)}");
-                contentHTMLElements = document.DocumentNode.QuerySelectorAll("div.container");
-                currentAttempt++;
-            }
-
-
-            // Continue processing the HTML document
-            var rowHTMLElements = contentHTMLElements.QuerySelectorAll("div.align-center");
+                // Continue processing the HTML document
+            var rowHTMLElements = html.CssSelect("div.a-section");
             var productHTMLElements = rowHTMLElements.QuerySelectorAll("a");
             // Process the HTML document as needed
 
