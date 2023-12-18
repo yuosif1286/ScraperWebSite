@@ -17,8 +17,8 @@
             </tr>
         </thead>
         <tbody>
-            <PcdepotProductComponent Pcdepotdetails="_pcdepotdetails"></PcdepotProductComponent>
-            <SenqProductComponent Senqdetails="_senqdetails"></SenqProductComponent>
+            <ElryanProductComponent Pcdepotdetails="_elryanDetails"></ElryanProductComponent>
+            <TomataProductComponent Senqdetails="_tomataDetails"></TomataProductComponent>
             <PhcoProductComponent Pcdepotdetails="_phcodetails"></PhcoProductComponent>
         </tbody>
     </table>
@@ -29,15 +29,15 @@
     public bool loading { get; set; } = true;
     public string message { get; set; } = "ابحث على اي منتج تود الحصول ع اسعاره";
     public string? Search { get; set; } = "";
-    List<ProductDetails> _pcdepotdetails = new();
-    List<ProductDetails> _senqdetails = new();
+    List<ProductDetails> _elryanDetails = new();
+    List<ProductDetails> _tomataDetails = new();
     List<ProductDetails> _phcodetails = new();
 
 
     async Task FetchSearchResults()
     {
-        _pcdepotdetails = await _scraperService.DoScraperSenheng();
-        _senqdetails = await _scraperService.DoScraperSenq();
+        //_elryanDetails = await _scraperService.DoScraperElryan();
+       // _tomataDetails = await _scraperService.DoScraperTamata();
         _phcodetails = await _scraperService.DoScraperPhco();
     }
 

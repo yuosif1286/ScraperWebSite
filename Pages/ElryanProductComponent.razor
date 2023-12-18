@@ -1,12 +1,13 @@
-﻿@page "/Senq"
+﻿@page "/Pcdepot"
 
-@if (Senqdetails.Any())
+@if (Pcdepotdetails.Any())
 {
     <tr>
-        <h2> Senq.com.My Product Table</h2>
+        <h2> Elryan.com Product Table</h2>
     </tr>
 
-    @foreach (var product in Senqdetails)
+
+    @foreach (var product in Pcdepotdetails)
     {
         <tr>
             <td>@product.Name</td>
@@ -20,5 +21,9 @@
 @code
 {
     [Parameter]
-    public List<ProductDetails> Senqdetails { get; set; } = new();
+    public List<ProductDetails> Pcdepotdetails { get; set; } = new();
+
+
+
+
 }
